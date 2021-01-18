@@ -1,5 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
 
+.big-checkbox > input {
+  width: 20px;
+  height: 20px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  cursor: pointer;
+}
+
 /*!
  * Bootstrap v4.5.3 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors

@@ -35,8 +35,7 @@ class ItemController extends Controller
         ]);
 
         //creates a new object if method is post or select the item from database
-        $item = $request->isMethod('post') ? new Item : Item::findOrFail($request->item_id);
-        $item->id = $request->input('item_id');
+        $item = new Item;
         $item->name = $request->input('name');
         $item->price = $request->input('price');
         $item->sort = $request->input('sort');

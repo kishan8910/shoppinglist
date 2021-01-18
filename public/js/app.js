@@ -2017,7 +2017,6 @@ var Errors = /*#__PURE__*/function () {
         method: 'get',
         url: '/api/items/'
       }).then(function (response) {
-        console.log(response);
         _this.items = response.data.data;
 
         _this.items.forEach(function (item) {
@@ -2033,10 +2032,37 @@ var Errors = /*#__PURE__*/function () {
     },
 
     /**
+     * method for deleting an item
+     * @param item_id
+     */
+    deleteItem: function deleteItem(item_id) {
+      var _this2 = this;
+
+      if (confirm("Do you really want to delete?")) {
+        axios({
+          method: 'delete',
+          url: '/api/items/' + item_id
+        }).then(function (res) {
+          _this2.fetchItems();
+
+          _this2.$emit("item-deleted");
+
+          Vue.use(VueToast);
+          var instance = Vue.$toast;
+          instance.success('Item deleted!', {
+            position: 'top-right'
+          });
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
+    },
+
+    /**
      * method for creating an item
      */
     createItem: function createItem() {
-      var _this2 = this;
+      var _this3 = this;
 
       var maxOrder = Math.max.apply(Math, this.items.map(function (o) {
         return o.sort;
@@ -2050,19 +2076,19 @@ var Errors = /*#__PURE__*/function () {
           bought: 0,
           sort: maxOrder + 1
         }
-      }).then(function (res) {
-        _this2.errors = new Errors();
+      }).then(function (response) {
+        _this3.errors = new Errors();
 
-        _this2.$emit("item-added");
+        _this3.items.push(item);
 
-        _this2.item = {};
+        _this3.item = {};
         Vue.use(VueToast);
         var instance = Vue.$toast;
         instance.success('Item created!', {
           position: 'top-right'
         });
       })["catch"](function (error) {
-        _this2.errors.record(error.response.data);
+        _this3.errors.record(error.response.data);
       });
     },
 
@@ -2072,7 +2098,7 @@ var Errors = /*#__PURE__*/function () {
      * @param event
      */
     boughtItem: function boughtItem(item_id, event) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (event.target.checked) {
         var checked = 1;
@@ -2094,7 +2120,7 @@ var Errors = /*#__PURE__*/function () {
           position: 'top-right'
         });
       })["catch"](function (error) {
-        _this3.errors.record(error.response.data);
+        _this4.errors.record(error.response.data);
       });
     }
   }

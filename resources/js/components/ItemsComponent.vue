@@ -96,7 +96,6 @@ export default {
                 url: '/api/items/'
             })
             .then(response => {
-                console.log(response);
                 this.items = response.data.data;
                 this.items.forEach(item => {
                     if(item.bought == 1) {
@@ -113,12 +112,37 @@ export default {
        
         
         /**
+         * method for deleting an item
+         * @param item_id
+         */
+        deleteItem(item_id) {
+            
+            if(confirm("Do you really want to delete?")) {
+                axios({
+                        method: 'delete',
+                        url: '/api/items/'+item_id,
+                    })
+                    .then(res => {
+                        this.fetchItems();
+                        this.$emit("item-deleted");
+                        Vue.use(VueToast);
+                        let instance = Vue.$toast;
+                        instance.success('Item deleted!', {
+                            position: 'top-right'
+                        });
+                    })
+                    .catch(error =>{
+                        console.log(error)
+                });
+            }
+        },
+        
+        /**
          * method for creating an item
          */
         createItem() {
 
             var maxOrder = Math.max.apply(Math, this.items.map(function(o) { return o.sort; }));
-            
             axios({
                 method: 'post',
                 url: '/api/items',
@@ -129,9 +153,9 @@ export default {
                     sort : maxOrder + 1 
                 }
             })
-            .then(res => {
+            .then(response => {
                 this.errors = new Errors();
-                this.$emit("item-added");
+                this.items.push(item);                
                 this.item = {};
                 Vue.use(VueToast);
                 let instance = Vue.$toast;
@@ -139,7 +163,7 @@ export default {
                     position: 'top-right'
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 this.errors.record(error.response.data);
             });
         },
