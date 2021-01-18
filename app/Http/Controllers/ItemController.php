@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Item as ItemResource;
 use App\Item;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreItemRequest;
 
 class ItemController extends Controller
 {
@@ -25,15 +26,8 @@ class ItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreItemRequest $request)
     {
-        // validation rules for incoming data
-        $this->validate($request, [
-            'name' => [
-                'required'
-            ]
-        ]);
-
         //creates a new object if method is post or select the item from database
         $item = new Item;
         $item->name = $request->input('name');
