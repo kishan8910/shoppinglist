@@ -58,7 +58,7 @@ class ItemController extends Controller
     {
 
         // get all the items from the database
-        $items = Shoppinglist::all();
+        $items = Item::all();
 
         // loop through existing items in database
         foreach ($items as $item) {

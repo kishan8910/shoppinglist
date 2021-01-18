@@ -82,7 +82,33 @@ export default {
         }
     },
 
+    created() {
+        this.fetchItems();
+    },
+
     methods: {
+
+        //method for fetch items
+        fetchItems() {
+            this.loading = true;
+            axios({
+                method: 'get',
+                url: '/api/items/'
+            })
+            .then(response => {
+                console.log(response);
+                this.items = response.data.data;
+                this.items.forEach(item => {
+                    if(item.bought == 1) {
+                        this.boughtItems.push(item.id);
+                    }
+                });
+                this.loading = false;
+            })
+            .catch(error =>{
+                console.log(error)
+            });
+        },
 
        
         

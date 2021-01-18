@@ -2004,12 +2004,39 @@ var Errors = /*#__PURE__*/function () {
       itemsBought: []
     };
   },
+  created: function created() {
+    this.fetchItems();
+  },
   methods: {
+    //method for fetch items
+    fetchItems: function fetchItems() {
+      var _this = this;
+
+      this.loading = true;
+      axios({
+        method: 'get',
+        url: '/api/items/'
+      }).then(function (response) {
+        console.log(response);
+        _this.items = response.data.data;
+
+        _this.items.forEach(function (item) {
+          if (item.bought == 1) {
+            _this.boughtItems.push(item.id);
+          }
+        });
+
+        _this.loading = false;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+
     /**
      * method for creating an item
      */
     createItem: function createItem() {
-      var _this = this;
+      var _this2 = this;
 
       var maxOrder = Math.max.apply(Math, this.items.map(function (o) {
         return o.sort;
@@ -2024,18 +2051,18 @@ var Errors = /*#__PURE__*/function () {
           sort: maxOrder + 1
         }
       }).then(function (res) {
-        _this.errors = new Errors();
+        _this2.errors = new Errors();
 
-        _this.$emit("item-added");
+        _this2.$emit("item-added");
 
-        _this.item = {};
+        _this2.item = {};
         Vue.use(VueToast);
         var instance = Vue.$toast;
         instance.success('Item created!', {
           position: 'top-right'
         });
       })["catch"](function (error) {
-        _this.errors.record(error.response.data);
+        _this2.errors.record(error.response.data);
       });
     },
 
@@ -2045,7 +2072,7 @@ var Errors = /*#__PURE__*/function () {
      * @param event
      */
     boughtItem: function boughtItem(item_id, event) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (event.target.checked) {
         var checked = 1;
@@ -2067,7 +2094,7 @@ var Errors = /*#__PURE__*/function () {
           position: 'top-right'
         });
       })["catch"](function (error) {
-        _this2.errors.record(error.response.data);
+        _this3.errors.record(error.response.data);
       });
     }
   }
