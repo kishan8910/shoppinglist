@@ -2005,6 +2005,7 @@ var Errors = /*#__PURE__*/function () {
     };
   },
   created: function created() {
+    // loading items when the the components created
     this.fetchItems();
   },
   methods: {
@@ -2021,13 +2022,41 @@ var Errors = /*#__PURE__*/function () {
 
         _this.items.forEach(function (item) {
           if (item.bought == 1) {
-            _this.boughtItems.push(item.id);
+            _this.itemsBought.push(item.id);
           }
         });
 
         _this.loading = false;
       })["catch"](function (error) {
         console.log(error);
+        _this.loading = false;
+      });
+    },
+    // method for sorting items
+    sortItems: function sortItems(items) {
+      return items.slice().sort(function (a, b) {
+        return a.sort - b.sort;
+      });
+    },
+
+    /**
+     * method for saving the sorted items' positions
+     * @param items array
+     */
+    saveSortItems: function saveSortItems(items) {
+      var _this2 = this;
+
+      items.map(function (item, index) {
+        item.sort = index + 1;
+      });
+      axios({
+        method: 'put',
+        url: '/api/items/sort',
+        data: {
+          items: items
+        }
+      }).then(function (res) {
+        _this2.fetchItems();
       });
     },
 
@@ -2036,16 +2065,16 @@ var Errors = /*#__PURE__*/function () {
      * @param item_id
      */
     deleteItem: function deleteItem(item_id) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (confirm("Do you really want to delete?")) {
         axios({
           method: 'delete',
           url: '/api/items/' + item_id
         }).then(function (res) {
-          _this2.fetchItems();
+          _this3.fetchItems();
 
-          _this2.$emit("item-deleted");
+          _this3.$emit("item-deleted");
 
           Vue.use(VueToast);
           var instance = Vue.$toast;
@@ -2062,7 +2091,7 @@ var Errors = /*#__PURE__*/function () {
      * method for creating an item
      */
     createItem: function createItem() {
-      var _this3 = this;
+      var _this4 = this;
 
       var maxOrder = Math.max.apply(Math, this.items.map(function (o) {
         return o.sort;
@@ -2077,18 +2106,18 @@ var Errors = /*#__PURE__*/function () {
           sort: maxOrder + 1
         }
       }).then(function (response) {
-        _this3.errors = new Errors();
+        _this4.errors = new Errors();
 
-        _this3.items.push(item);
+        _this4.fetchItems();
 
-        _this3.item = {};
+        _this4.item = {};
         Vue.use(VueToast);
         var instance = Vue.$toast;
         instance.success('Item created!', {
           position: 'top-right'
         });
-      })["catch"](function (error) {
-        _this3.errors.record(error.response.data);
+      })["catch"](function (e) {
+        _this4.errors.record(e.response.data);
       });
     },
 
@@ -2098,7 +2127,7 @@ var Errors = /*#__PURE__*/function () {
      * @param event
      */
     boughtItem: function boughtItem(item_id, event) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (event.target.checked) {
         var checked = 1;
@@ -2120,7 +2149,7 @@ var Errors = /*#__PURE__*/function () {
           position: 'top-right'
         });
       })["catch"](function (error) {
-        _this4.errors.record(error.response.data);
+        _this5.errors.record(error.response.data);
       });
     }
   }
