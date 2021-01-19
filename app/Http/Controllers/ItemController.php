@@ -37,7 +37,7 @@ class ItemController extends Controller
         $item->bought = $request->input('bought');
 
         if ($item->save()) {
-            return new ItemResource($item);
+            return new ItemResource($item, Response::HTTP_CREATED);
         }
     }
 
@@ -64,6 +64,8 @@ class ItemController extends Controller
                 }
             }
         }
+
+        return Response::HTTP_OK;
     }
 
     /**
@@ -78,7 +80,7 @@ class ItemController extends Controller
         $item = Item::findOrFail($item_id);
         $item->bought = $request->input('bought');
         $item->save();
-        return new ItemResource($item);
+        return new ItemResource($item,Response::HTTP_OK);
     }
 
 
@@ -94,7 +96,7 @@ class ItemController extends Controller
         $item = Item::findOrFail($id);
 
         if ($item->delete()) {
-            return new ItemResource($item);
+            return new ItemResource($item,Response::HTTP_OK);
         }
     }
 }
