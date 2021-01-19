@@ -168,7 +168,7 @@ export default {
          * method for creating an item
          */
         createItem() {
-
+            // finding the mximum value of the order number
             var maxOrder = Math.max.apply(Math, this.items.map(function(o) { return o.sort; }));
             axios({
                 method: 'post',
@@ -201,6 +201,7 @@ export default {
          */
         boughtItem(item_id, event) {
             
+            // checking whether the checkbox is checked or not
             if (event.target.checked) {
                 var checked = 1;
             }

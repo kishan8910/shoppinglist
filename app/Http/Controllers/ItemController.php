@@ -6,6 +6,7 @@ use App\Http\Resources\Item as ItemResource;
 use App\Item;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreItemRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class ItemController extends Controller
 {
@@ -16,7 +17,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return ItemResource::collection(Item::all());
+        return ItemResource::collection(Item::all(), Response::HTTP_OK);
     }
 
 
@@ -49,7 +50,6 @@ class ItemController extends Controller
      */
     public function sort(Request $request)
     {
-
         // get all the items from the database
         $items = Item::all();
 
@@ -78,6 +78,7 @@ class ItemController extends Controller
         $item = Item::findOrFail($item_id);
         $item->bought = $request->input('bought');
         $item->save();
+        return new ItemResource($item);
     }
 
 

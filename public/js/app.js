@@ -2093,6 +2093,7 @@ var Errors = /*#__PURE__*/function () {
     createItem: function createItem() {
       var _this4 = this;
 
+      // finding the mximum value of the order number
       var maxOrder = Math.max.apply(Math, this.items.map(function (o) {
         return o.sort;
       }));
@@ -2129,6 +2130,7 @@ var Errors = /*#__PURE__*/function () {
     boughtItem: function boughtItem(item_id, event) {
       var _this5 = this;
 
+      // checking whether the checkbox is checked or not
       if (event.target.checked) {
         var checked = 1;
       } else {

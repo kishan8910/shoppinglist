@@ -20,8 +20,6 @@ class ItemApiTest extends TestCase
      */
     public function testStoreItem()
     {
-
-
         $data = [
             "name" => "beer",
             "price" => 3,
@@ -57,7 +55,7 @@ class ItemApiTest extends TestCase
         
         $this->withoutExceptionHandling();
         $response = $this->put('api/items',$data);
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJsonStructure([
             'data' => [
                 'id', 'name', 'price', 'sort', 'bought', 'created_at', 'updated_at'
